@@ -1,15 +1,15 @@
 package repository
 
 import (
-	"MorningActivities-API/model"
 	"fmt"
+	"go-api/model"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type ITaskRepository interface {
-	GetAllTasks(tasks *[]model.Task, userId int) error
+	GetAllTasks(tasks *[]model.Task, userId uint) error
 	GetTaskById(task *model.Task, userId uint, taskId uint) error
 	CreateTask(task *model.Task) error
 	UpdateTask(task *model.Task, userId uint, taskId uint) error
@@ -24,7 +24,7 @@ func NewTaskRepository(db *gorm.DB) ITaskRepository{
 	return &taskRepository{db}
 }
 
-func(tr *taskRepository)GetAllTasks(tasks *[]model.Task, userId int) error {
+func(tr *taskRepository)GetAllTasks(tasks *[]model.Task, userId uint) error {
 	if err := tr.db.Joins("User").Where("user_id=?",userId).Order("created_at").Find(tasks).Error; err!= nil {
 		return err
 	}

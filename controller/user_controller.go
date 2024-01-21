@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"MorningActivities-API/model"
-	"MorningActivities-API/usecase"
+	"go-api/model"
+	"go-api/usecase"
 	"net/http"
 	"os"
 	"time"
