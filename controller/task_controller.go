@@ -26,19 +26,6 @@ func NewTaskController(tu usecase.ITaskUsecase)ITaskController{
 	return &taskController{tu}
 }
 
-// func(tc *taskController)GetAllTasks(c echo.Context) error{
-// 	// taskRes :=[]model.TaskResponse{} //GetAllTasksでTaskResponse{}が生成されるため不要
-// 	user := c.Get("user").(*jwt.Token)
-// 	claims := user.Claims.(jwt.MapClaims)
-// 	userId := claims["user_id"]
-	
-// 	taskRes, err :=tc.tu.GetAllTasks(uint(userId.(float64)))
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, err.Error())
-// 	}
-// 	return c.JSON(http.StatusOK, taskRes)
-// } 
-
 func (tc *taskController) GetAllTasks(c echo.Context) error {
 	//JWTのuser_idを取り込む
 	//JWTをデコードして値を取ってくる
