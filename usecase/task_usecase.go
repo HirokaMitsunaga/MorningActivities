@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"MorningActivities-API/model"
-	"MorningActivities-API/repository"
+	"go-api/API/model"
+	"go-api/API/repository"
 )
 
 
@@ -22,7 +22,7 @@ func NewTaskUsecase(tr repository.ITaskRepository)ITaskUsecase{
 	return &taskUsecase{tr}
 }
 
-func(tu *taskUsecase)GetAllTasks(userId int)([]model.TaskResponse, error){
+func(tu *taskUsecase)GetAllTasks(userId uint)([]model.TaskResponse, error){
 	tasks :=[]model.Task{}
 	if err := tu.tr.GetAllTasks(&tasks,userId); err != nil {
 		return nil,err

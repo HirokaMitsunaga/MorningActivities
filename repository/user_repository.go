@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"MorningActivities-API/model"
+	"go-api/API/model"
 
 	"gorm.io/gorm"
 )

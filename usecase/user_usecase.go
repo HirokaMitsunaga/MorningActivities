@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"MorningActivities-API/model"
-	"MorningActivities-API/repository"
+	"go-api/API/model"
+	"go-api/API/repository"
 	"os"
 	"time"
 

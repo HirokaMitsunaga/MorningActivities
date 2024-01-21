@@ -1,9 +1,9 @@
 package main
 
 import (
-	"MorningActivities-API/db"
-	"MorningActivities-API/model"
 	"fmt"
+	"go-api/API/db"
+	"go-api/API/model"
 )
 
 func main() {
