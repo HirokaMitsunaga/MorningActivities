@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"go-api/API/model"
-	"go-api/API/usecase"
+	"go-api/model"
+	"go-api/usecase"
 	"net/http"
 	"os"
 	"time"

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"go-api/API/db"
-	"go-api/API/model"
+	"go-api/db"
+	"go-api/model"
 )
 
 func main() {

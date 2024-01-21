@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"go-api/API/model"
-	"go-api/API/repository"
+	"go-api/model"
+	"go-api/repository"
 )
 
 

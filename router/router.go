@@ -1,7 +1,7 @@
 package router
 
 import (
-	"go-api/API/controller"
+	"go-api/controller"
 	"os"
 
 	echojwt "github.com/labstack/echo-jwt/v4"
