@@ -14,7 +14,7 @@ type IUserController interface{
 	SignUp(c echo.Context) error
 	LogIn(c echo.Context) error
 	LogOut(c echo.Context) error
-	CsrfToken (c echo.Context) error
+	CsrfToken(c echo.Context) error
 }
 
 type userController struct{
