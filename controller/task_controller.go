@@ -85,7 +85,7 @@ func(tc *taskController)UpdateTask(c echo.Context)error{
 	if err != nil{
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusNoContent, taskRes)
+	return c.JSON(http.StatusOK, taskRes)
 }
 
 func(tc *taskController)DeleteTask(c echo.Context)error{
