@@ -11,10 +11,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type IUserUsecase interface{
-	SignUp(user model.User)(model.UserResponse, error)
+type IUserUsecase interface {
+	SignUp(user model.User) (model.UserResponse, error)
 	//返り値のstringはJWTトークン
-	Login(user model.User)(string, error)
+	Login(user model.User) (string, error)
 }
 
 type userUsecase struct {
@@ -26,7 +26,7 @@ func NewUserUsecase(ur repository.IUserRepository, uv validator.IUserValidator) 
 	return &userUsecase{ur, uv}
 }
 
-func(uu *userUsecase) SignUp(user model.User)(model.UserResponse, error){
+func (uu *userUsecase) SignUp(user model.User) (model.UserResponse, error) {
 	if err := uu.uv.UserValidate(user); err != nil {
 		return model.UserResponse{}, err
 	}
@@ -36,16 +36,16 @@ func(uu *userUsecase) SignUp(user model.User)(model.UserResponse, error){
 	}
 	newUser := model.User{Email: user.Email, Password: string(hash)}
 	if err := uu.ur.CreateUser(&newUser); err != nil {
-		return model.UserResponse{},err
+		return model.UserResponse{}, err
 	}
-	userRes :=model.UserResponse{
-		ID: newUser.ID,
-		Email:newUser.Email,
+	userRes := model.UserResponse{
+		ID:    newUser.ID,
+		Email: newUser.Email,
 	}
-	return userRes,nil
+	return userRes, nil
 }
 
-func(uu *userUsecase) Login(user model.User)(string, error){
+func (uu *userUsecase) Login(user model.User) (string, error) {
 	if err := uu.uv.UserValidate(user); err != nil {
 		return "", err
 	}
@@ -53,18 +53,18 @@ func(uu *userUsecase) Login(user model.User)(string, error){
 	storedUser := model.User{}
 	//データベースからメールアドレスのユーザーがいるのか確認して、storedUserへ格納する
 	//ユーザがいなければエラーを出す。
-	if err := uu.ur.GetUserByEmail(&storedUser,user.Email); err != nil{
+	if err := uu.ur.GetUserByEmail(&storedUser, user.Email); err != nil {
 		return "", err
 	}
 	//平文で送られてきたパスワードとデータベース内のパスワード（復号かしたもの）を比較する
 	err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(user.Password))
-	if err != nil{
+	if err != nil {
 		return "", err
-	}  
+	}
 	//JWTトークンの設定
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": storedUser.ID,
-		"exp": time.Now().Add(time.Hour *12).Unix(),
+		"exp":     time.Now().Add(time.Hour * 12).Unix(),
 	})
 	//JWTトークンの生成
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
