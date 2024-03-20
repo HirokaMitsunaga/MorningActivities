@@ -31,10 +31,12 @@ func (tu *taskUsecase) GetAllTasks(userId uint) ([]model.TaskResponse, error) {
 	resTasks := []model.TaskResponse{}
 	for _, v := range tasks {
 		t := model.TaskResponse{
-			ID:        v.ID,
-			Title:     v.Title,
-			CreatedAt: v.CreatedAt,
-			UpdatedAt: v.UpdatedAt,
+			ID:               v.ID,
+			Title:            v.Title,
+			CreatedAt:        v.CreatedAt,
+			UpdatedAt:        v.UpdatedAt,
+			ScheduledMinutes: v.ScheduledMinutes,
+			ActualMinutes:    v.ActualMinutes,
 		}
 		resTasks = append(resTasks, t)
 	}
@@ -47,10 +49,12 @@ func (tu *taskUsecase) GetTaskById(userId uint, taskId uint) (model.TaskResponse
 		return model.TaskResponse{}, err
 	}
 	resTask := model.TaskResponse{
-		ID:        task.ID,
-		Title:     task.Title,
-		CreatedAt: task.CreatedAt,
-		UpdatedAt: task.UpdatedAt,
+		ID:               task.ID,
+		Title:            task.Title,
+		CreatedAt:        task.CreatedAt,
+		UpdatedAt:        task.UpdatedAt,
+		ScheduledMinutes: task.ScheduledMinutes,
+		ActualMinutes:    task.ActualMinutes,
 	}
 	return resTask, nil
 }
@@ -63,10 +67,12 @@ func (tu *taskUsecase) CreateTask(task model.Task) (model.TaskResponse, error) {
 		return model.TaskResponse{}, err
 	}
 	resTask := model.TaskResponse{
-		ID:        task.ID,
-		Title:     task.Title,
-		CreatedAt: task.CreatedAt,
-		UpdatedAt: task.UpdatedAt,
+		ID:               task.ID,
+		Title:            task.Title,
+		CreatedAt:        task.CreatedAt,
+		UpdatedAt:        task.UpdatedAt,
+		ScheduledMinutes: task.ScheduledMinutes,
+		ActualMinutes:    task.ActualMinutes,
 	}
 	return resTask, nil
 }
@@ -79,10 +85,12 @@ func (tu *taskUsecase) UpdateTask(task model.Task, userId uint, taskId uint) (mo
 		return model.TaskResponse{}, err
 	}
 	resTask := model.TaskResponse{
-		ID:        task.ID,
-		Title:     task.Title,
-		CreatedAt: task.CreatedAt,
-		UpdatedAt: task.UpdatedAt,
+		ID:               task.ID,
+		Title:            task.Title,
+		CreatedAt:        task.CreatedAt,
+		UpdatedAt:        task.UpdatedAt,
+		ScheduledMinutes: task.ScheduledMinutes,
+		ActualMinutes:    task.ActualMinutes,
 	}
 	return resTask, nil
 }

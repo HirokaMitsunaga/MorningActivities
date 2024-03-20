@@ -59,7 +59,7 @@ func (tr *taskRepository) CreateTask(task *model.Task) error {
 
 func (tr *taskRepository) UpdateTask(task *model.Task, userId uint, taskId uint) error {
 	//Clausesの設定のところは、更新した値をtaskの先に書き込んでくれる
-	result := tr.db.Model(task).Clauses(clause.Returning{}).Where("id=? AND user_id=?", taskId, userId).Update("title", task.Title)
+	result := tr.db.Model(task).Clauses(clause.Returning{}).Where("id=? AND user_id=?", taskId, userId).Updates(map[string]interface{}{"title": task.Title, "scheduled_minutes": task.ScheduledMinutes, "actual_minutes": task.ActualMinutes})
 	if result.Error != nil {
 		return result.Error
 	}
