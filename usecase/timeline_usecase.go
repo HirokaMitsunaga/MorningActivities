@@ -36,6 +36,7 @@ func (tlu *timelineUsecase) GetAllTimelines() ([]model.TimelineResponse, error) 
 			CreatedAt:    v.CreatedAt,
 			UpdatedAt:    v.UpdatedAt,
 			UserId:       v.UserId,
+			Email:        v.Email,
 		}
 		resTimelines = append(resTimelines, t)
 	}
@@ -47,7 +48,7 @@ func (tlu *timelineUsecase) GetTimelineById(timelineId uint) (model.TimelineResp
 	if err := tlu.tlr.GetTimelineById(&timeline, timelineId); err != nil {
 		return model.TimelineResponse{}, err
 	}
-	resTask := model.TimelineResponse{
+	resTimeline := model.TimelineResponse{
 		ID:           timeline.ID,
 		Sentence:     timeline.Sentence,
 		LikeCount:    timeline.LikeCount,
@@ -55,8 +56,9 @@ func (tlu *timelineUsecase) GetTimelineById(timelineId uint) (model.TimelineResp
 		CreatedAt:    timeline.CreatedAt,
 		UpdatedAt:    timeline.UpdatedAt,
 		UserId:       timeline.UserId,
+		Email:        timeline.Email,
 	}
-	return resTask, nil
+	return resTimeline, nil
 }
 
 func (tlu *timelineUsecase) CreateTimeline(timeline model.Timeline) (model.TimelineResponse, error) {
@@ -66,7 +68,7 @@ func (tlu *timelineUsecase) CreateTimeline(timeline model.Timeline) (model.Timel
 	if err := tlu.tlr.CreateTimeline(&timeline); err != nil {
 		return model.TimelineResponse{}, err
 	}
-	resTask := model.TimelineResponse{
+	resTimeline := model.TimelineResponse{
 		ID:           timeline.ID,
 		Sentence:     timeline.Sentence,
 		LikeCount:    timeline.LikeCount,
@@ -74,8 +76,9 @@ func (tlu *timelineUsecase) CreateTimeline(timeline model.Timeline) (model.Timel
 		CreatedAt:    timeline.CreatedAt,
 		UpdatedAt:    timeline.UpdatedAt,
 		UserId:       timeline.UserId,
+		Email:        timeline.Email,
 	}
-	return resTask, nil
+	return resTimeline, nil
 }
 
 func (tlu *timelineUsecase) UpdateTimeline(timeline model.Timeline, timelineId uint) (model.TimelineResponse, error) {
@@ -85,7 +88,7 @@ func (tlu *timelineUsecase) UpdateTimeline(timeline model.Timeline, timelineId u
 	if err := tlu.tlr.UpdateTimeline(&timeline, timelineId); err != nil {
 		return model.TimelineResponse{}, err
 	}
-	resTask := model.TimelineResponse{
+	resTimeline := model.TimelineResponse{
 		ID:           timeline.ID,
 		Sentence:     timeline.Sentence,
 		CreatedAt:    timeline.CreatedAt,
@@ -93,8 +96,9 @@ func (tlu *timelineUsecase) UpdateTimeline(timeline model.Timeline, timelineId u
 		LikeCount:    timeline.LikeCount,
 		CommentCount: timeline.CommentCount,
 		UserId:       timeline.UserId,
+		Email:        timeline.Email,
 	}
-	return resTask, nil
+	return resTimeline, nil
 }
 
 func (tlu *timelineUsecase) DeleteTimeline(timelineId uint) error {

@@ -29,11 +29,11 @@ func (tlc *timelineController) GetAllTimelines(c echo.Context) error {
 	// user := c.Get("user").(*jwt.Token)
 	// claims := user.Claims.(jwt.MapClaims)
 	// userId := claims["user_id"]
-	taskRes, err := tlc.tlu.GetAllTimelines()
+	timelineRes, err := tlc.tlu.GetAllTimelines()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, taskRes)
+	return c.JSON(http.StatusOK, timelineRes)
 }
 
 func (tlc *timelineController) GetTimelineById(c echo.Context) error {

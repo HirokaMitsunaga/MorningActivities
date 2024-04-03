@@ -11,6 +11,7 @@ type Timeline struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 	User         User      `json:"user" gorm:"foreignKey:UserId; constraint:OnDelete:CASCADE"`
 	UserId       uint      `json:"user_id" gorm:"not null"`
+	Email        string    `json:"email" gorm:"not null"`
 }
 
 type TimelineResponse struct {
@@ -21,4 +22,5 @@ type TimelineResponse struct {
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 	UserId       uint      `json:"user_id"`
+	Email        string    `json:"email" gorm:"not null"`
 }
