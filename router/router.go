@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(uc controller.IUserController, tc controller.ITaskController) *echo.Echo {
+func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc controller.ITimelineController) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
@@ -41,5 +41,12 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController) *ec
 	t.POST("", tc.CreateTask)
 	t.PUT("/:taskId", tc.UpdateTask)
 	t.DELETE("/:taskId", tc.DeleteTask)
+
+	e.GET("/timelines", tlc.GetAllTimelines)
+	e.GET("/timelines/:timelineID", tlc.GetTimelineById)
+	e.POST("/timelines", tlc.CreateTimeline)
+	e.PUT("/timelines/:timelineID", tlc.UpdateTimeline)
+	e.DELETE("/timelines/:timelineID", tlc.DeleteTimeline)
 	return e
+
 }

@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	dbConn:= db.NewDB()
+	dbConn := db.NewDB()
 	defer fmt.Println("Successfully Migrated")
 	defer db.CloseDB(dbConn)
-	dbConn.AutoMigrate(&model.User{}, &model.Task{})
+	dbConn.AutoMigrate(&model.User{}, &model.Task{}, &model.Timeline{}, &model.LikeComment{}, &model.TimelineLikeAssociation{})
 }

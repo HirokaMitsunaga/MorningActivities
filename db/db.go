@@ -10,11 +10,10 @@ import (
 	"gorm.io/gorm"
 )
 
-
-func NewDB() *gorm.DB{
-	if os.Getenv("GO_ENV") == "dev"{
-		err :=godotenv.Load()
-		if err != nil{
+func NewDB() *gorm.DB {
+	if os.Getenv("GO_ENV") == "dev" {
+		err := godotenv.Load()
+		if err != nil {
 			log.Fatalln(err)
 		}
 	}
