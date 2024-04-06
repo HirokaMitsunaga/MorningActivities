@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
 
@@ -51,17 +52,25 @@ func (tlc *timelineController) GetTimelineById(c echo.Context) error {
 }
 
 func (tlc *timelineController) CreateTimeline(c echo.Context) error {
+	user, ok := c.Get("user").(*jwt.Token)
+	if !ok {
+		return c.JSON(http.StatusUnauthorized, "Unauthorized")
+	}
 
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64) // JWTからuserIdを取得
 	timeline := model.Timeline{}
 	if err := c.Bind(&timeline); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+	timeline.UserId = uint(userId) // UserIdをTimelineオブジェクトに設定
 	timelineRes, err := tlc.tlu.CreateTimeline(timeline)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusCreated, timelineRes)
 }
+
 func (tlc *timelineController) UpdateTimeline(c echo.Context) error {
 	id := c.Param("timelineID")
 	timelineID, _ := strconv.Atoi(id)
