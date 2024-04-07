@@ -42,11 +42,16 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc
 	t.PUT("/:taskId", tc.UpdateTask)
 	t.DELETE("/:taskId", tc.DeleteTask)
 
-	e.GET("/timelines", tlc.GetAllTimelines)
-	e.GET("/timelines/:timelineID", tlc.GetTimelineById)
-	e.POST("/timelines", tlc.CreateTimeline)
-	e.PUT("/timelines/:timelineID", tlc.UpdateTimeline)
-	e.DELETE("/timelines/:timelineID", tlc.DeleteTimeline)
+	tl := e.Group("/timelines")
+	tl.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
+	tl.GET("", tlc.GetAllTimelines)
+	tl.GET("/:timelineID", tlc.GetTimelineById)
+	tl.POST("", tlc.CreateTimeline)
+	tl.PUT("/:timelineID", tlc.UpdateTimeline)
+	tl.DELETE("/:timelineID", tlc.DeleteTimeline)
 	return e
 
 }

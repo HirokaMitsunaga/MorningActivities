@@ -36,7 +36,8 @@ func (tlu *timelineUsecase) GetAllTimelines() ([]model.TimelineResponse, error) 
 			CreatedAt:    v.CreatedAt,
 			UpdatedAt:    v.UpdatedAt,
 			UserId:       v.UserId,
-			Email:        v.Email,
+			//EmailはUser構造体から取得
+			Email: v.User.Email,
 		}
 		resTimelines = append(resTimelines, t)
 	}
@@ -56,7 +57,7 @@ func (tlu *timelineUsecase) GetTimelineById(timelineId uint) (model.TimelineResp
 		CreatedAt:    timeline.CreatedAt,
 		UpdatedAt:    timeline.UpdatedAt,
 		UserId:       timeline.UserId,
-		Email:        timeline.Email,
+		Email:        timeline.User.Email,
 	}
 	return resTimeline, nil
 }
@@ -76,7 +77,7 @@ func (tlu *timelineUsecase) CreateTimeline(timeline model.Timeline) (model.Timel
 		CreatedAt:    timeline.CreatedAt,
 		UpdatedAt:    timeline.UpdatedAt,
 		UserId:       timeline.UserId,
-		Email:        timeline.Email,
+		Email:        timeline.User.Email,
 	}
 	return resTimeline, nil
 }
@@ -96,7 +97,7 @@ func (tlu *timelineUsecase) UpdateTimeline(timeline model.Timeline, timelineId u
 		LikeCount:    timeline.LikeCount,
 		CommentCount: timeline.CommentCount,
 		UserId:       timeline.UserId,
-		Email:        timeline.Email,
+		Email:        timeline.User.Email,
 	}
 	return resTimeline, nil
 }

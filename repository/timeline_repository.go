@@ -26,7 +26,7 @@ func NewTimelineRepository(db *gorm.DB) ITimelineRepository {
 
 func (tlr *timelineRepository) GetAllTimelines(timelines *[]model.Timeline) error {
 	// if err := tlr.db.Order("created_at").Find(timelines).Error; err != nil {
-	if err := tlr.db.Select("timelines.*, users.email").Joins("left join users on users.id = timelines.user_id").Order("created_at").Find(timelines).Error; err != nil {
+	if err := tlr.db.Preload("User").Find(timelines).Error; err != nil {
 		return err
 	}
 	return nil
