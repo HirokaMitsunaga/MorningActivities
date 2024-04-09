@@ -46,7 +46,7 @@ func (tlr *timelineRepository) GetTimelineById(timeline *model.Timeline, timelin
 }
 
 func (tlr *timelineRepository) CreateTimeline(timeline *model.Timeline) error {
-	if err := tlr.db.Preload("User").Create(timeline).Error; err != nil {
+	if err := tlr.db.Create(timeline).Error; err != nil {
 		return err
 	}
 	if err := tlr.db.Preload("User").First(timeline, "id=?", timeline.ID).Error; err != nil {
@@ -57,7 +57,7 @@ func (tlr *timelineRepository) CreateTimeline(timeline *model.Timeline) error {
 
 func (tlr *timelineRepository) UpdateTimeline(timeline *model.Timeline, timelineId uint) error {
 	//Clausesの設定のところは、更新した値をtimelineの先に書き込んでくれる
-	result := tlr.db.Preload("User").Model(timeline).Clauses(clause.Returning{}).Where("id=?", timelineId).Updates(map[string]interface{}{"sentence": timeline.Sentence})
+	result := tlr.db.Model(timeline).Clauses(clause.Returning{}).Where("id=?", timelineId).Updates(map[string]interface{}{"sentence": timeline.Sentence})
 	if result.Error != nil {
 		return result.Error
 	}
