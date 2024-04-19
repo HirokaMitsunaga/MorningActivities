@@ -27,6 +27,7 @@ func NewTimelineController(tlu usecase.ITimelineUsecase) ITimelineController {
 }
 
 func (tlc *timelineController) GetAllTimelines(c echo.Context) error {
+
 	// user := c.Get("user").(*jwt.Token)
 	// claims := user.Claims.(jwt.MapClaims)
 	// userId := claims["user_id"]
@@ -34,6 +35,8 @@ func (tlc *timelineController) GetAllTimelines(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
+	// println(timelineRes)
+	// json.Marshal(timelineRes)
 	return c.JSON(http.StatusOK, timelineRes)
 }
 

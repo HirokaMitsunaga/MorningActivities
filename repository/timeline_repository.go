@@ -25,10 +25,30 @@ func NewTimelineRepository(db *gorm.DB) ITimelineRepository {
 }
 
 func (tlr *timelineRepository) GetAllTimelines(timelines *[]model.Timeline) error {
-	// if err := tlr.db.Order("created_at").Find(timelines).Error; err != nil {
 	if err := tlr.db.Preload("User").Find(timelines).Error; err != nil {
 		return err
 	}
+	//いいね数を数える
+	for index, timeline := range *timelines {
+		var likeCount int64
+		if err := tlr.db.Model(&model.Like{}).Where("target_id = ? AND target_type = ?", timeline.ID, "timeline").Count(&likeCount).Error; err != nil {
+			return err
+		}
+		(*timelines)[index].LikeCount = int(likeCount)
+	}
+	//コメント数を数える
+	for index, timeline := range *timelines {
+		var commentCount int64
+		if err := tlr.db.Model(&model.Comment{}).Where("timeline_id = ?", timeline.ID).Count(&commentCount).Error; err != nil {
+			return err
+		}
+		(*timelines)[index].CommentCount = int(commentCount)
+	}
+	//いいね数とコメント数の確認
+	for _, timeline := range *timelines {
+		println(timeline.ID, timeline.LikeCount, timeline.CommentCount)
+	}
+
 	return nil
 }
 
@@ -46,7 +66,7 @@ func (tlr *timelineRepository) GetTimelineById(timeline *model.Timeline, timelin
 }
 
 func (tlr *timelineRepository) CreateTimeline(timeline *model.Timeline) error {
-	if err := tlr.db.Preload("User").Create(timeline).Error; err != nil {
+	if err := tlr.db.Create(timeline).Error; err != nil {
 		return err
 	}
 	if err := tlr.db.Preload("User").First(timeline, "id=?", timeline.ID).Error; err != nil {
@@ -57,7 +77,7 @@ func (tlr *timelineRepository) CreateTimeline(timeline *model.Timeline) error {
 
 func (tlr *timelineRepository) UpdateTimeline(timeline *model.Timeline, timelineId uint) error {
 	//Clausesの設定のところは、更新した値をtimelineの先に書き込んでくれる
-	result := tlr.db.Preload("User").Model(timeline).Clauses(clause.Returning{}).Where("id=?", timelineId).Updates(map[string]interface{}{"sentence": timeline.Sentence})
+	result := tlr.db.Model(timeline).Clauses(clause.Returning{}).Where("id=?", timelineId).Updates(map[string]interface{}{"sentence": timeline.Sentence})
 	if result.Error != nil {
 		return result.Error
 	}
