@@ -39,8 +39,6 @@ func (tlu *timelineUsecase) GetAllTimelines() ([]model.TimelineResponse, error) 
 			//EmailはUser構造体から取得
 			Email: v.User.Email,
 		}
-		//t.ID, t.LikeCount, t.Sentence
-		// println(t.LikeCount)
 
 		resTimelines = append(resTimelines, t)
 	}

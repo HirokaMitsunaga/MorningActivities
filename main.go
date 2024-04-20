@@ -16,13 +16,16 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	taskRepository := repository.NewTaskRepository(db)
 	timelineRepository := repository.NewTimelineRepository(db)
+	likeRepository := repository.NewLikeRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepository, userValidator)
 	taskUsecase := usecase.NewTaskUsecase(taskRepository, taskValidator)
 	timelineUsecase := usecase.NewTimelineUsecase(timelineRepository)
+	likeUsecase := usecase.NewLikeUsecase(likeRepository)
 	userController := controller.NewUserController(userUsecase)
 	taskController := controller.NewTaskController(taskUsecase)
 	timelineController := controller.NewTimelineController(timelineUsecase)
-	e := router.NewRouter(userController, taskController, timelineController)
+	likeController := controller.NewLikeController(likeUsecase)
+	e := router.NewRouter(userController, taskController, timelineController, likeController)
 	//エラーが出たらLoggerがエラー出力して、強制終了する
 	e.Logger.Fatal(e.Start(":8080"))
 }

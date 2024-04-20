@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc controller.ITimelineController) *echo.Echo {
+func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc controller.ITimelineController, lc controller.ILikeController) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
@@ -52,6 +52,16 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc
 	tl.POST("", tlc.CreateTimeline)
 	tl.PUT("/:timelineID", tlc.UpdateTimeline)
 	tl.DELETE("/:timelineID", tlc.DeleteTimeline)
+
+	//likeの設定
+	l := e.Group("/likes")
+	l.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
+	l.POST("", lc.CreateLike)
+	l.DELETE("/:likeID", lc.DeleteLike)
+
 	return e
 
 }
