@@ -35,8 +35,6 @@ func (tlc *timelineController) GetAllTimelines(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	// println(timelineRes)
-	// json.Marshal(timelineRes)
 	return c.JSON(http.StatusOK, timelineRes)
 }
 

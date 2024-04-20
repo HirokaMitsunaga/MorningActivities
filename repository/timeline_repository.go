@@ -44,11 +44,6 @@ func (tlr *timelineRepository) GetAllTimelines(timelines *[]model.Timeline) erro
 		}
 		(*timelines)[index].CommentCount = int(commentCount)
 	}
-	//いいね数とコメント数の確認
-	for _, timeline := range *timelines {
-		println(timeline.ID, timeline.LikeCount, timeline.CommentCount)
-	}
-
 	return nil
 }
 
