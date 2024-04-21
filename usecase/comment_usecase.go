@@ -11,7 +11,7 @@ type ICommentUsecase interface {
 	GetCommentsByTimelineId(timelineId uint) ([]model.CommentResponse, error)
 	CreateComment(comment model.Comment) (model.CommentResponse, error)
 	UpdateComment(comment model.Comment, userId uint, commentId uint) (model.CommentResponse, error)
-	DeleteComment(userId uint, commentId uint) error
+	DeleteComment(comment *model.Comment, userId uint) error
 }
 
 type commentUsecase struct {
@@ -108,8 +108,8 @@ func (cu *commentUsecase) UpdateComment(comment model.Comment, userId uint, comm
 	return resComment, nil
 }
 
-func (cu *commentUsecase) DeleteComment(userId uint, commentId uint) error {
-	if err := cu.cr.DeleteComment(userId, commentId); err != nil {
+func (cu *commentUsecase) DeleteComment(comment *model.Comment, userId uint) error {
+	if err := cu.cr.DeleteComment(comment, userId); err != nil {
 		return err
 	}
 	return nil
