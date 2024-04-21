@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc controller.ITimelineController, lc controller.ILikeController) *echo.Echo {
+func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc controller.ITimelineController, lc controller.ILikeController, cc controller.ICommentController) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
@@ -62,6 +62,16 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc
 	l.POST("", lc.CreateLike)
 	l.DELETE("/:likeID", lc.DeleteLike)
 
+	com := e.Group("/comments")
+	com.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
+	com.GET("", cc.GetCommentsHandler)
+	com.GET("/:commentID", cc.GetCommentById)
+	com.POST("", cc.CreateComment)
+	com.PUT("/:commentID", cc.UpdateComment)
+	com.DELETE("/:commentID", cc.DeleteComment)
 	return e
 
 }

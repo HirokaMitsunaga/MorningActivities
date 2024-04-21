@@ -48,6 +48,7 @@ func (tlr *timelineRepository) GetAllTimelines(timelines *[]model.Timeline) erro
 }
 
 func (tlr *timelineRepository) GetTimelineById(timeline *model.Timeline, timelineId uint) error {
+	//email情報を取得するためPreload("User")は必要
 	if err := tlr.db.Preload("User").First(timeline, "id=?", timelineId).Error; err != nil {
 		return err
 	}
