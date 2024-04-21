@@ -69,8 +69,8 @@ func (cr *commentRepository) CreateComment(comment *model.Comment) error {
 }
 
 func (cr *commentRepository) UpdateComment(comment *model.Comment, userId uint, commentId uint) error {
-	//Clausesの設定のところは、更新した値をcommentの先に書き込んでくれる
-	result := cr.db.Debug().Model(comment).Clauses(clause.Returning{}).Where("id=? AND user_id=?", commentId, userId).Updates(map[string]interface{}{"comment": comment.Comment})
+	//Clausesの設定のところは、更新したカラムの値を全て返してくれる
+	result := cr.db.Model(comment).Clauses(clause.Returning{}).Where("id=? AND user_id=?", commentId, userId).Updates(map[string]interface{}{"comment": comment.Comment})
 	if result.Error != nil {
 		return result.Error
 	}
