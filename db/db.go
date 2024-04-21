@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func NewDB() *gorm.DB {
@@ -20,7 +21,7 @@ func NewDB() *gorm.DB {
 	url := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_PW"), os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_PORT"), os.Getenv("POSTGRES_DB"))
-	db, err := gorm.Open(postgres.Open(url), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(url), &gorm.Config{Logger: logger.Default.LogMode(logger.Info)})
 	if err != nil {
 		log.Fatalln(err)
 	}

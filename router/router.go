@@ -12,6 +12,7 @@ import (
 
 func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc controller.ITimelineController, lc controller.ILikeController, cc controller.ICommentController) *echo.Echo {
 	e := echo.New()
+	e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,

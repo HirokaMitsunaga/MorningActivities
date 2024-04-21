@@ -52,13 +52,21 @@ func (tlr *timelineRepository) GetTimelineById(timeline *model.Timeline, timelin
 	if err := tlr.db.Preload("User").First(timeline, "id=?", timelineId).Error; err != nil {
 		return err
 	}
+	//いいね数を数える
+	var likeCount int64
+	if err := tlr.db.Model(&model.Like{}).Where("target_id = ? AND target_type = ?", timeline.ID, "timeline").Count(&likeCount).Error; err != nil {
+		return err
+	}
+	timeline.LikeCount = int(likeCount)
+
+	//コメント数を数える
+	var commentCount int64
+	if err := tlr.db.Model(&model.Comment{}).Where("timeline_id = ?", timeline.ID).Count(&commentCount).Error; err != nil {
+		return err
+	}
+	timeline.CommentCount = int(commentCount)
+
 	return nil
-	// 下記のSQLと同様の動作をしている
-	// SELECT tasks.*
-	// FROM tasks
-	// JOIN Users ON tasks.user_id = Users.id
-	// WHERE tasks.user_id = ? AND tasks.id = ?
-	// LIMIT 1;
 }
 
 func (tlr *timelineRepository) CreateTimeline(timeline *model.Timeline) error {
