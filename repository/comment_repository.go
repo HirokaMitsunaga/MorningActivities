@@ -14,7 +14,7 @@ type ICommentRepository interface {
 	GetCommentsByTimelineId(comments *[]model.Comment, timelineId uint) error
 	CreateComment(comment *model.Comment) error
 	UpdateComment(comment *model.Comment, userId uint, commentId uint) error
-	DeleteComment(userId uint, commentId uint) error
+	DeleteComment(comment *model.Comment, userId uint) error
 }
 
 type commentRepository struct {
@@ -65,6 +65,16 @@ func (cr *commentRepository) CreateComment(comment *model.Comment) error {
 	if err := cr.db.Create(comment).Error; err != nil {
 		return err
 	}
+	var commentCount int64
+	if err := cr.db.Model(&model.Comment{}).Where("timeline_id = ?", comment.TimelineId).Count(&commentCount).Error; err != nil {
+		return err
+	}
+	if err := cr.db.Model(&model.Timeline{}).Where("id = ?", comment.TimelineId).Update("comment_count", commentCount).Error; err != nil {
+		return err
+	}
+	// if err := cr.db.Model(&model.Timeline{}).Where("id = ?", comment.TimelineId).Update("comment_count", gorm.Expr("comment_count + ?", 1)).Error; err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
@@ -83,13 +93,20 @@ func (cr *commentRepository) UpdateComment(comment *model.Comment, userId uint, 
 	return nil
 }
 
-func (cr *commentRepository) DeleteComment(userId uint, commentId uint) error {
-	result := cr.db.Where("id=? AND user_id=?", commentId, userId).Delete(&model.Comment{})
+func (cr *commentRepository) DeleteComment(comment *model.Comment, userId uint) error {
+	result := cr.db.Where("id=? AND user_id=?", comment.ID, userId).Delete(&model.Comment{})
 	if result.Error != nil {
 		return result.Error
 	}
 	if result.RowsAffected < 1 {
 		return fmt.Errorf("object does not exist")
+	}
+	var commentCount int64
+	if err := cr.db.Model(&model.Comment{}).Where("timeline_id = ?", comment.TimelineId).Count(&commentCount).Error; err != nil {
+		return err
+	}
+	if err := cr.db.Model(&model.Timeline{}).Where("id = ?", comment.TimelineId).Update("comment_count", commentCount).Error; err != nil {
+		return err
 	}
 	return nil
 }

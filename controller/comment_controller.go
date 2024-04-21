@@ -118,8 +118,14 @@ func (cc *commentController) DeleteComment(c echo.Context) error {
 	userId := claims["user_id"]
 	id := c.Param("commentID")
 	commentId, _ := strconv.Atoi(id)
+	comment := model.Comment{}
+	if err := c.Bind(&comment); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	comment.ID = uint(commentId)
+	comment.UserId = uint(userId.(float64))
 
-	if err := cc.cu.DeleteComment(uint(userId.(float64)), uint(commentId)); err != nil {
+	if err := cc.cu.DeleteComment(&comment, uint(userId.(float64))); err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.NoContent(http.StatusNoContent)
