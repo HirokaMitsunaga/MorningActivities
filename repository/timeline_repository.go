@@ -25,7 +25,7 @@ func NewTimelineRepository(db *gorm.DB) ITimelineRepository {
 }
 
 func (tlr *timelineRepository) GetAllTimelines(timelines *[]model.Timeline) error {
-	if err := tlr.db.Preload("User").Find(timelines).Error; err != nil {
+	if err := tlr.db.Preload("User").Order("created_at").Find(timelines).Error; err != nil {
 		return err
 	}
 	//いいね数を数える
