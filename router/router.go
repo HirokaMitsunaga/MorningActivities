@@ -62,6 +62,7 @@ func NewRouter(uc controller.IUserController, tc controller.ITaskController, tlc
 	}))
 	l.POST("", lc.CreateLike)
 	l.DELETE("/:likeID", lc.DeleteLike)
+	l.POST("/toggle", lc.ToggleLike)
 
 	com := e.Group("/comments")
 	com.Use(echojwt.WithConfig(echojwt.Config{
