@@ -13,6 +13,7 @@ import (
 type ILikeController interface {
 	CreateLike(c echo.Context) error
 	DeleteLike(c echo.Context) error
+	ToggleLike(c echo.Context) error
 }
 
 type likeController struct {
@@ -52,6 +53,22 @@ func (lc *likeController) DeleteLike(c echo.Context) error {
 	like.UserId = uint(userId) // UserIdをTimelineオブジェクトに設定
 	like.ID = uint(likeID)
 	err := lc.lu.DeleteLike(like)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.NoContent(http.StatusNoContent)
+}
+
+func (lc *likeController) ToggleLike(c echo.Context) error {
+	user, _ := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"].(float64)
+	like := model.Like{}
+	if err := c.Bind(&like); err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	like.UserId = uint(userId)
+	err := lc.lu.ToggleLike(&like)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

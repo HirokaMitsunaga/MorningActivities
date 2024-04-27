@@ -10,6 +10,7 @@ import (
 type ILikeRepository interface {
 	CreateLike(like *model.Like) error
 	DeleteLike(like model.Like) error
+	ToggleLike(like *model.Like) error
 }
 
 type likeRepository struct {
@@ -61,4 +62,15 @@ func (lr *likeRepository) DeleteLike(like model.Like) error {
 		return err
 	}
 	return nil
+}
+
+func (lr *likeRepository) ToggleLike(like *model.Like) error {
+	var existingLike model.Like
+	if err := lr.db.Where("user_id = ? AND target_id = ? AND target_type = ?", like.UserId, like.TargetId, like.TargetType).First(&existingLike).Error; err != nil {
+		if gorm.ErrRecordNotFound == err {
+			return lr.CreateLike(like)
+		}
+		return err
+	}
+	return lr.DeleteLike(existingLike)
 }
