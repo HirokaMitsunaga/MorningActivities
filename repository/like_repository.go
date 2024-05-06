@@ -31,11 +31,18 @@ func (lr *likeRepository) CreateLike(like *model.Like) error {
 	if err := lr.db.Model(&model.Like{}).Where("target_id = ? AND target_type = ?", like.TargetId, like.TargetType).Count(&likeCount).Error; err != nil {
 		return err
 	}
-	//集計したlikeCountをtimeline.LikeCountに反映
-	if err := lr.db.Model(&model.Timeline{}).Where("id = ?", like.TargetId).Update("like_count", likeCount).Error; err != nil {
-		return err
-	}
 
+	if like.TargetType == "timeline" {
+		//集計したlikeCountをtimeline.LikeCountに反映
+		if err := lr.db.Model(&model.Timeline{}).Where("id = ?", like.TargetId).Update("like_count", likeCount).Error; err != nil {
+			return err
+		}
+	} else if like.TargetType == "comment" {
+		//集計したlikeCountをcomment.LikeCountに反映
+		if err := lr.db.Model(&model.Comment{}).Where("id = ?", like.TargetId).Update("like_count", likeCount).Error; err != nil {
+			return err
+		}
+	}
 	if err := lr.db.First(like, "id=?", like.ID).Error; err != nil {
 		return err
 	}
@@ -50,7 +57,6 @@ func (lr *likeRepository) DeleteLike(like model.Like) error {
 	if result.RowsAffected < 1 {
 		return fmt.Errorf("object does not exist")
 	}
-
 	// タイムラインのLikeCountを更新
 	//likeを集計してlikeCountへ代入する
 	var likeCount int64
@@ -58,8 +64,15 @@ func (lr *likeRepository) DeleteLike(like model.Like) error {
 		return err
 	}
 	//集計したlikeCountをtimeline.LikeCountに反映
-	if err := lr.db.Model(&model.Timeline{}).Where("id = ?", like.TargetId).Update("like_count", likeCount).Error; err != nil {
-		return err
+	if like.TargetType == "timeline" {
+		if err := lr.db.Model(&model.Timeline{}).Where("id = ?", like.TargetId).Update("like_count", likeCount).Error; err != nil {
+			return err
+		}
+		//集計したlikeCountをcomment.LikeCountに反映
+	} else if like.TargetType == "comment" {
+		if err := lr.db.Model(&model.Comment{}).Where("id = ?", like.TargetId).Update("like_count", likeCount).Error; err != nil {
+			return err
+		}
 	}
 	return nil
 }
