@@ -34,6 +34,7 @@ func (cu *commentUsecase) GetAllComments(userId uint) ([]model.CommentResponse, 
 			TimelineId: v.TimelineId,
 			UserId:     v.UserId,
 			Comment:    v.Comment,
+			LikeCount:  v.LikeCount,
 			CreatedAt:  v.CreatedAt,
 			UpdatedAt:  v.UpdatedAt,
 		}
@@ -52,6 +53,7 @@ func (cu *commentUsecase) GetCommentById(commentId uint) (model.CommentResponse,
 		TimelineId: comment.TimelineId,
 		UserId:     comment.UserId,
 		Comment:    comment.Comment,
+		LikeCount:  comment.LikeCount,
 		CreatedAt:  comment.CreatedAt,
 		UpdatedAt:  comment.UpdatedAt,
 	}
@@ -70,6 +72,7 @@ func (cu *commentUsecase) GetCommentsByTimelineId(timelineId uint) ([]model.Comm
 			TimelineId: v.TimelineId,
 			UserId:     v.UserId,
 			Comment:    v.Comment,
+			LikeCount:  v.LikeCount,
 			CreatedAt:  v.CreatedAt,
 			UpdatedAt:  v.UpdatedAt,
 		}
@@ -87,6 +90,7 @@ func (cu *commentUsecase) CreateComment(comment model.Comment) (model.CommentRes
 		TimelineId: comment.TimelineId,
 		UserId:     comment.UserId,
 		Comment:    comment.Comment,
+		LikeCount:  comment.LikeCount,
 		CreatedAt:  comment.CreatedAt,
 		UpdatedAt:  comment.UpdatedAt,
 	}
@@ -102,6 +106,7 @@ func (cu *commentUsecase) UpdateComment(comment model.Comment, userId uint, comm
 		TimelineId: comment.TimelineId,
 		UserId:     comment.UserId,
 		Comment:    comment.Comment,
+		LikeCount:  comment.LikeCount,
 		CreatedAt:  comment.CreatedAt,
 		UpdatedAt:  comment.UpdatedAt,
 	}
